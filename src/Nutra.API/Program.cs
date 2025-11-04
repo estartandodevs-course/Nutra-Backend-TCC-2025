@@ -13,7 +13,6 @@ builder.AddServiceDefaults();
 // Add Lambda hosting
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
-// Add DbContext (MySQL)
 var connectionString = builder.Configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<NutraDbContext>(options =>
 {
