@@ -4,7 +4,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__Default": "Server=db.mrfsolution.com.br;Port=3307;Database=nutra;User Id=nutra;Password=Ddevs#=1245;SslMode=None;"
+        "ConnectionStrings__Default": "Server=db.mrfsolution.com.br;Port=3307;Database=devs-nutra;User Id=devs-nutra;Password=Ddevs#=1245;SslMode=None;AllowPublicKeyRetrieval=True;"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000",
@@ -14,7 +14,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__Default": "Server=db.mrfsolution.com.br;Port=3307;Database=nutra;User Id=nutra;Password=Ddevs#=1245;SslMode=None;"
+        "ConnectionStrings__Default": "Server=db.mrfsolution.com.br;Port=3307;Database=devs-nutra;User Id=devs-nutra;Password=Ddevs#=1245;SslMode=None;AllowPublicKeyRetrieval=True;"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
