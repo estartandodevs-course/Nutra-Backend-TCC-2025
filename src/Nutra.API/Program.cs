@@ -1,8 +1,8 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Nutra.API.Data;
+using Nutra.API.Infrastructure;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +18,7 @@ if (string.IsNullOrEmpty(connectionString))
     throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 }
 
-builder.Services.AddDbContext<NutraDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Use a specific MySQL version or get it from configuration
     // AutoDetect can fail during startup in serverless environments
@@ -74,7 +74,7 @@ var app = builder.Build();
 // Apply pending migrations at startup
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<NutraDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
     try

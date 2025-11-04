@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Nutra.API.Data;
+using Nutra.API.Infrastructure;
 
 namespace Nutra.API.Controllers;
 
@@ -13,17 +13,18 @@ namespace Nutra.API.Controllers;
 public class HealthCheckController : ControllerBase
 {
     private readonly ILogger<HealthCheckController> _logger;
-    private readonly NutraDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-    public HealthCheckController(ILogger<HealthCheckController> logger, NutraDbContext dbContext)
+    public HealthCheckController(ILogger<HealthCheckController> logger, ApplicationDbContext dbContext)
     {
         _logger = logger;
         _dbContext = dbContext;
     }
 
     /// <summary>
-    /// Verifica se a conexão com o banco de dados está funcionando
+    /// Verifies database connection status
     /// </summary>
+    /// <returns>Database connection status</returns>
     [HttpGet("database")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(object), StatusCodes.Status503ServiceUnavailable)]
@@ -31,48 +32,86 @@ public class HealthCheckController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Verificando conexão com o banco de dados");
+            _logger.LogInformation("Checking database connection...");
             
-            // Tenta abrir uma conexão com o banco de dados
+            // Try to connect to the database
             var canConnect = await _dbContext.Database.CanConnectAsync(cancellationToken);
             
-            if (canConnect)
+            if (!canConnect)
             {
-                // Tenta executar uma query simples para garantir que a conexão está funcionando
-                await _dbContext.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);
-                
-                _logger.LogInformation("Conexão com o banco de dados verificada com sucesso");
-                
-                return Ok(new
+                _logger.LogWarning("Database connection failed");
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
                 {
-                    status = "ok",
-                    message = "Conexão com o banco de dados está funcionando corretamente",
+                    status = "unhealthy",
+                    database = "disconnected",
                     timestamp = DateTime.UtcNow,
-                    database = _dbContext.Database.GetDbConnection().Database
+                    message = "Unable to connect to the database"
                 });
             }
-            else
+
+                        // Execute a simple query to verify connectivity and get connection info
+            await _dbContext.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);                                                                        
+            
+            // Get connection info while connection is open
+            var connection = _dbContext.Database.GetDbConnection();
+            var connectionString = _dbContext.Database.GetConnectionString();
+            string databaseName = connection.Database ?? "unknown";
+            string? serverVersion = null;
+            
+            try
             {
-                _logger.LogWarning("Não foi possível conectar ao banco de dados");
-                return StatusCode(503, new
+                // Ensure connection is open to get server version
+                if (connection.State != System.Data.ConnectionState.Open)
                 {
-                    status = "error",
-                    message = "Não foi possível conectar ao banco de dados",
-                    timestamp = DateTime.UtcNow
-                });
+                    await connection.OpenAsync(cancellationToken);
+                }
+                serverVersion = connection.ServerVersion;
             }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not retrieve server version");
+            }
+
+            _logger.LogInformation("Database connection successful");
+            
+            return Ok(new
+            {
+                status = "healthy",
+                database = "connected",
+                timestamp = DateTime.UtcNow,
+                databaseName = databaseName,
+                serverVersion = serverVersion ?? "unknown",                                                                            
+                message = "Database connection is working correctly"
+            });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao verificar conexão com o banco de dados");
-            return StatusCode(503, new
+            _logger.LogError(ex, "Error checking database connection");
+            
+            return StatusCode(StatusCodes.Status503ServiceUnavailable, new
             {
-                status = "error",
-                message = "Erro ao verificar conexão com o banco de dados",
-                error = ex.Message,
-                timestamp = DateTime.UtcNow
+                status = "unhealthy",
+                database = "error",
+                timestamp = DateTime.UtcNow,
+                message = ex.Message,
+                error = ex.GetType().Name
             });
         }
     }
-}
 
+    /// <summary>
+    /// General health check endpoint
+    /// </summary>
+    /// <returns>API health status</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    public ActionResult GetHealth()
+    {
+        return Ok(new
+        {
+            status = "healthy",
+            timestamp = DateTime.UtcNow,
+            message = "API is running"
+        });
+    }
+}
