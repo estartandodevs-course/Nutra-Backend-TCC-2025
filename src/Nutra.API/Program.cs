@@ -1,7 +1,5 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Nutra.Domain.Repository;
-using Nutra.API.Infrastructure;
 using Nutra.API.Data;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
@@ -56,9 +54,6 @@ builder.Services.AddCors(options =>
 // Add Exception Handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
-
-// Repositories
-builder.Services.AddScoped<IOrderRepository, EfOrderRepository>();
 
 var app = builder.Build();
 
