@@ -1,6 +1,8 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Nutra.Domain.Repository;
 using Nutra.API.Infrastructure;
+using Nutra.API.Data;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -11,8 +13,12 @@ builder.AddServiceDefaults();
 // Add Lambda hosting
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
-// Add Repository
-builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
+// Add DbContext (MySQL)
+var connectionString = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<NutraDbContext>(options =>
+{
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+});
 
 // Add Controllers
 builder.Services.AddControllers();
@@ -51,6 +57,9 @@ builder.Services.AddCors(options =>
 // Add Exception Handler
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+// Repositories
+builder.Services.AddScoped<IOrderRepository, EfOrderRepository>();
 
 var app = builder.Build();
 
