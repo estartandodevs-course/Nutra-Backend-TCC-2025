@@ -3,6 +3,9 @@ using Nutra.API.Infrastructure;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Nutra.API.Infrastructure.Repositorys;
+using Nutra.Application.CasosDeUso.Usuarios.Criar;
+using Nutra.Domain.Repository;
 using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Use a specific MySQL version or get it from configuration
     // AutoDetect can fail during startup in serverless environments
-    var serverVersion = new MySqlServerVersion(new Version(8, 0, 21)); // Adjust to your MySQL version
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 35)); // Adjust to your MySQL version
     options.UseMySql(connectionString, serverVersion, mysqlOptions =>
     {
         mysqlOptions.EnableRetryOnFailure(
@@ -31,7 +34,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             errorNumbersToAdd: null);
     });
 });
-
+builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(CriarUsuariosCommand).Assembly);
+});
 // Add Controllers
 builder.Services.AddControllers();
 
