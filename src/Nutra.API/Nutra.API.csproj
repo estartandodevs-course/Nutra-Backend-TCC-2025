@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="9.2.0" />
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.9.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -36,6 +37,10 @@
     <ProjectReference Include="..\..\Nutra.ServiceDefaults\Nutra.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Nutra.Application\Nutra.Application.csproj" />
     <ProjectReference Include="..\Nutra.Domain\Nutra.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

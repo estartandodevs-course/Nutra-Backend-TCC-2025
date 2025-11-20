@@ -1,10 +1,13 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
 using Nutra.API.Infrastructure;
+using System.Text.Json.Serialization;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Nutra.API.Infrastructure.Repositorys;
-using Nutra.Application.CasosDeUso.Usuarios.Criar;
+using Nutra.API.Infrastructure.Repository;
+using Nutra.Application.CasosDeUso.Registros.Criar;
+using Nutra.Application.CasosDeUso.Respostas.Criar;
+using Nutra.Application.CasosDeUso.Usuario.Criar;
 using Nutra.Domain.Repository;
 using Pomelo.EntityFrameworkCore.MySql;
 
@@ -34,13 +37,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             errorNumbersToAdd: null);
     });
 });
-builder.Services.AddScoped<IUsuariosRepository, UsuariosRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IRespostasRepository, RespostaRepository>();
+builder.Services.AddScoped<IRegistrosRepository, RegistrosRepository>();
+builder.Services.AddScoped<ITipoRegistroRepository, TipoRegistroRepository>();
+builder.Services.AddScoped<IValidacaoRepository, ValidacaoRepository>();
+
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(CriarUsuariosCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CriarUsuarioCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CriarRespostaCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CriarRegistrosCommand).Assembly);
 });
 // Add Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(allowIntegerValues: false)
+    );
+});
 
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
