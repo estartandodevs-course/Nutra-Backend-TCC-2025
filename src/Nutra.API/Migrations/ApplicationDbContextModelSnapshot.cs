@@ -203,7 +203,7 @@ namespace Nutra.API.Migrations
 
                     b.Property<string>("Categoria")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("longtext")
                         .HasColumnName("Categoria");
 
                     b.Property<DateTime>("CreatedAt")
@@ -214,13 +214,15 @@ namespace Nutra.API.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Descricao");
 
+                    b.Property<string>("TipoDetalhe")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("TipoDetalhe");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Categoria")
-                        .IsUnique();
 
                     b.ToTable("TiposRegistro", (string)null);
                 });

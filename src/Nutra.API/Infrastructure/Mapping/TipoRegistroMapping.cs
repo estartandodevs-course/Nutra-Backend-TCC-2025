@@ -16,9 +16,11 @@ public class TipoRegistroMapping : IEntityTypeConfiguration<TipoRegistro>
             .IsRequired()
             .HasColumnName("Categoria")
             .HasConversion<string>(); 
-
-        builder.HasIndex(t => t.Categoria)
-            .IsUnique();
+        
+        builder.Property(t => t.TipoDetalhe)
+            .HasColumnName("TipoDetalhe")
+            .HasConversion<string>()
+            .IsRequired();
         
         builder.Property(t => t.Descricao)
             .HasMaxLength(500)
