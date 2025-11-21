@@ -22,16 +22,17 @@ public class RegistrosRepository : IRegistrosRepository
     public async Task<List<Registros>> ListarRegistros(CancellationToken cancellationToken)
     {
         return await _context.Registros
-            .AsNoTracking()
-            .ToListAsync();
+            .Include(r => r.Usuarios)   
+            .Include(r => r.Tipo)      
+            .ToListAsync(cancellationToken);
     }
     public async Task<Registros?> ListarId(int id, CancellationToken cancellationToken)
     {
         return await _context.Registros
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .Include(r => r.Usuarios)
+            .Include(r => r.Tipo)
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
-
     public async Task<bool> DeletarRegistros(int id, CancellationToken cancellationToken)
     {
         var registro = await _context.Registros.FindAsync(new object[] { id }, cancellationToken);
