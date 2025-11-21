@@ -1,11 +1,12 @@
 using MediatR;
 using System.Net;
+using Nutra.Application.DTOs;
 using Nutra.Domain.Repository;
 using Nutra.Domain.Entidades;
 
 namespace Nutra.Application.CasosDeUso.Registros.Criar;
 
-public class CriarRegistrosCommandHandler 
+public class CriarRegistrosCommandHandler
     : IRequestHandler<CriarRegistrosCommand, Response<Domain.Entidades.Registros>>
 {
     private readonly IRegistrosRepository _registrosRepository;
@@ -26,7 +27,6 @@ public class CriarRegistrosCommandHandler
         CriarRegistrosCommand comando,
         CancellationToken cancellationToken)
     {
-      
         if (!comando.ValidarDados())
             return Response<Domain.Entidades.Registros>.Erro(
                 comando.ResultadoValidacao.Errors.First().ErrorMessage
@@ -36,14 +36,15 @@ public class CriarRegistrosCommandHandler
         if (usuario == null)
             return Response<Domain.Entidades.Registros>.Erro("Usuário não encontrado.");
 
-        var tipoRegistro = await _tipoRegistroRepository.ObterPorCategoria(
-            comando.Categoria.ToString(),
-            cancellationToken);
+        var tipoRegistro = await _tipoRegistroRepository.ObterPorCategoriaETipo(
+            comando.Categoria,
+            comando.TipoDetalhe,
+            cancellationToken
+        );
 
         if (tipoRegistro == null)
-            return Response<Domain.Entidades.Registros>.Erro("Categoria não encontrada.");
+            return Response<Domain.Entidades.Registros>.Erro("Tipo de registro não encontrado.");
 
-        // Criar registro
         var registro = new Domain.Entidades.Registros(
             comando.Quantidade,
             comando.Observacao,
@@ -56,3 +57,4 @@ public class CriarRegistrosCommandHandler
         return Response<Domain.Entidades.Registros>.Ok(registro);
     }
 }
+

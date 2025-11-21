@@ -2,17 +2,19 @@ using MediatR;
 using FluentValidation;
 using FluentValidation.Results;
 using System.Net;
+using Nutra.Application.DTOs;
 using Nutra.Domain.Enums;
 
 namespace Nutra.Application.CasosDeUso.Registros.Criar;
 
 public class CriarRegistrosCommand : IRequest<Response<Domain.Entidades.Registros>>
 {
+    public int Id { get; set; }
     public int Quantidade { get; set;}
     public string? Observacao { get; set; }
     public int IdUsuario { get; set; }
     public CategoriaRegistro Categoria { get; set; }
-    
+    public TipoDetalhe TipoDetalhe { get; set; }
     public ValidationResult ResultadoValidacao { get; set; }
 
 
@@ -50,6 +52,11 @@ public class CriarRegistrosCommand : IRequest<Response<Domain.Entidades.Registro
             .IsInEnum()
             .WithMessage("A categoria informada é inválida.")
             .WithErrorCode(HttpStatusCode.BadRequest.ToString());
+        
+        validacao.RuleFor(x => x.TipoDetalhe)
+            .NotNull()
+            .WithMessage("Informe o tipo detalhado correspondente à categoria.")
+            .When(x => x.Categoria == CategoriaRegistro.Alimentação || x.Categoria == CategoriaRegistro.Exercício);
 
         ResultadoValidacao = validacao.Validate(this);
         return ResultadoValidacao.IsValid;
