@@ -13,29 +13,21 @@ public class TipoRegistroRepository : ITipoRegistroRepository
         _context = context;
     }
 
-    public async Task<TipoRegistro?> ObterPorCategoria(string categoria, CancellationToken ct)
+    public async Task<TipoRegistro?> ObterPorCategoriaETipo(CategoriaRegistro categoria, TipoDetalhe tipoEspecifico,
+        CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(categoria))
-            return null;
+        var query = _context.Set<TipoRegistro>().AsQueryable();
 
-        // tenta converter a string para o enum (ignora maiúsc/minúsc)
-        if (!Enum.TryParse<CategoriaRegistro>(categoria.Trim(), true, out var categoriaEnum))
-            return null; // categoria inválida -> não existe no enum
+        query = query.Where(t => t.Categoria == categoria);
 
-        // agora a comparação é enum == enum (translável pelo EF)
+        query = query.Where(t => t.TipoDetalhe == tipoEspecifico);
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<TipoRegistro?> ObterPorId(int id, CancellationToken cancellationToken)
+    {
         return await _context.TipoRegistro
-            .FirstOrDefaultAsync(t => t.Categoria == categoriaEnum, ct);
+            .FirstOrDefaultAsync(tr => tr.Id == id, cancellationToken);
     }
-
-
-    /*public async Task<TipoRegistro?> ObterPorId(int id, CancellationToken ct)
-    {
-        return await _context.TiposRegistro
-            .FirstOrDefaultAsync(t => t.Id == id, ct);
-    }
-
-    public async Task<List<TipoRegistro>> ListarTodos(CancellationToken ct)
-    {
-        return await _context.TiposRegistro.ToListAsync(ct);
-    }*/
 }
