@@ -109,7 +109,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutra API V1");
-    c.RoutePrefix = "swagger";
+    c.RoutePrefix = "api/swagger";
     c.DocumentTitle = "Nutra API Documentation";
     c.DefaultModelsExpandDepth(-1);
     c.DisplayRequestDuration();
