@@ -108,7 +108,7 @@ app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutra API V1");
+    c.SwaggerEndpoint("/default/swagger/v1/swagger.json", "Nutra API V1");
     c.RoutePrefix = "api/swagger";
     c.DocumentTitle = "Nutra API Documentation";
     c.DefaultModelsExpandDepth(-1);
@@ -174,3 +174,4 @@ public class GlobalExceptionHandler : IExceptionHandler
         return true;
     }
 }
+
