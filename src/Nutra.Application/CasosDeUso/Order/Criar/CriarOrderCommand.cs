@@ -4,7 +4,7 @@ namespace Nutra.Application.CasosDeUso.Order.Criar;
 
 public class CriarOrderCommand
 {
-    public string OrderId { get; set; } = string.Empty;
+    public string OrderId { get; set; } 
     public string CustomerId { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
     public List<string> Items { get; set; } = new();
