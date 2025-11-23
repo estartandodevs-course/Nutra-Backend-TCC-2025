@@ -1,6 +1,5 @@
 using Nutra.Domain.Entidades;
 using Microsoft.EntityFrameworkCore;
-using Nutra.Domain.Entidades;
 
 namespace Nutra.API.Infrastructure;
     public class ApplicationDbContext: DbContext
