@@ -127,18 +127,33 @@ using (var scope = app.Services.CreateScope())
 app.UseExceptionHandler();
 
 // Configure Swagger (before MapDefaultEndpoints to avoid conflicts)
+// habilitando swagger para producao
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    var jsonPath = builder.Configuration["Swagger:JsonPath"];
+
+    c.SwaggerEndpoint(jsonPath, "Nutra API V1");
+    c.RoutePrefix = "api/swagger";
+    c.DocumentTitle = "Nutra API Documentation";
+    c.DefaultModelsExpandDepth(-1);
+    c.DisplayRequestDuration();
+});
+
+/*
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutra API V1");
-        c.RoutePrefix = "swagger"; // Swagger UI at /swagger
+        c.RoutePrefix = "swagger"; 
         c.DocumentTitle = "Nutra API Documentation";
-        c.DefaultModelsExpandDepth(-1); // Hide schemas by default
-        c.DisplayRequestDuration(); // Show request duration in Swagger UI
+        c.DefaultModelsExpandDepth(-1);
+        c.DisplayRequestDuration();
     });
 }
+*/
 
 app.MapDefaultEndpoints();
 
@@ -184,3 +199,4 @@ public class GlobalExceptionHandler : IExceptionHandler
         return true;
     }
 }
+
