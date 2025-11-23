@@ -1,8 +1,14 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
 using Nutra.API.Infrastructure;
+using System.Text.Json.Serialization;
 using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Nutra.API.Infrastructure.Repository;
+using Nutra.Application.CasosDeUso.Registros.Criar;
+using Nutra.Application.CasosDeUso.Respostas.Criar;
+using Nutra.Application.CasosDeUso.Usuario.Criar;
+using Nutra.Domain.Repository;
 using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Use a specific MySQL version or get it from configuration
     // AutoDetect can fail during startup in serverless environments
-    var serverVersion = new MySqlServerVersion(new Version(8, 0, 21)); // Adjust to your MySQL version
+    var serverVersion = new MySqlServerVersion(new Version(8, 0, 35)); // Adjust to your MySQL version
     options.UseMySql(connectionString, serverVersion, mysqlOptions =>
     {
         mysqlOptions.EnableRetryOnFailure(
@@ -31,9 +37,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             errorNumbersToAdd: null);
     });
 });
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IRespostasRepository, RespostaRepository>();
+builder.Services.AddScoped<IRegistrosRepository, RegistrosRepository>();
+builder.Services.AddScoped<ITipoRegistroRepository, TipoRegistroRepository>();
+builder.Services.AddScoped<IValidacaoRepository, ValidacaoRepository>();
 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(CriarUsuarioCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CriarRespostaCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CriarRegistrosCommand).Assembly);
+});
 // Add Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+    options.JsonSerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(allowIntegerValues: false)
+    );
+});
 
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
