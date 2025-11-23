@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Nutra.API.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial : Migration
+    public partial class criandoTabelaUsuario : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
