@@ -20,7 +20,7 @@ public class CriarUsuariosCommandHandler : IRequestHandler<CriarUsuariosCommand,
         {
             var novoUsuario = new Domain.Entidades.Usuarios(
                 comando.Email, 
-                comando.Nome
+                comando.Nome,
             );
 
             await _usuariosRepository.CriarUsuarios(novoUsuario, cancellationToken);

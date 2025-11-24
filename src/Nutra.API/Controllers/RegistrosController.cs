@@ -4,6 +4,7 @@ using Nutra.Application.CasosDeUso.Registros.Atualizar;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Registros.Deletar;
 using Nutra.Application.CasosDeUso.Registros.Listar;
+using Nutra.Application.DTOs;
 
 namespace Nutra.WebApi.Controllers;
 
@@ -19,8 +20,16 @@ public class RegistrosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CriarRegistro([FromBody] CriarRegistrosCommand comando)
+    public async Task<IActionResult> CriarRegistro([FromBody] RegistroCriarDTO dto)
     {
+        var comando = new CriarRegistrosCommand(
+            dto.IdUsuario,
+            dto.Categoria,
+            dto.TipoDetalhe,
+            dto.Quantidade,
+            dto.Observacao
+        );
+
         var resultado = await _mediator.Send(comando);
 
         if (!resultado.Sucesso)
@@ -51,10 +60,16 @@ public class RegistrosController : ControllerBase
     public async Task<IActionResult> AtualizarParcial(
         int idUsuario,
         int idRegistro,
-        [FromBody] AtualizarRegistrosCommand comando)
+        [FromBody] RegistroAtualizarDTO dto)
     {
-        comando.IdUsuario = idUsuario;
-        comando.Id = idRegistro;
+        var comando = new AtualizarRegistrosCommand
+        {
+            IdUsuario = idUsuario,
+            Id = idRegistro,
+            TipoDetalhe = dto.TipoDetalhe,
+            Quantidade = dto.Quantidade,
+            Observacao = dto.Observacao
+        };
 
         var resultado = await _mediator.Send(comando);
 
@@ -63,6 +78,7 @@ public class RegistrosController : ControllerBase
 
         return Ok(resultado);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Deletar(int id)
