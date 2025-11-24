@@ -53,10 +53,10 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-    options.JsonSerializerOptions.Converters.Add(
-        new JsonStringEnumConverter(allowIntegerValues: false)
-    );
-});
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(allowIntegerValues: false)
+        );
+    });
 
 // Add Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
@@ -68,7 +68,7 @@ builder.Services.AddSwaggerGen(c =>
         Title = "Nutra API",
         Description = "AWS Lambda ASP.NET Core API Nutra",
     });
-    
+
     // Include XML comments
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -99,7 +99,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    
+
     try
     {
         if (db.Database.GetPendingMigrations().Any())
@@ -116,23 +116,37 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        logger.LogError(ex, "Error applying migrations or ensuring database is created. " +
+                logger.LogError(ex, "Error applying migrations or ensuring database is created. " +
                            "The application will continue but database operations may fail.");
         // Don't throw - allow the app to start even if migrations fail
         // This is important for Lambda cold starts
     }
 }
 
-// Configure the HTTP request pipeline
+app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == HttpMethods.Options)
+    {
+        context.Response.StatusCode = 200;
+        await context.Response.CompleteAsync();
+    }
+    else
+    {
+        await next();
+    }
+});
+
+app.UseCors("AllowAll");
+
 app.UseExceptionHandler();
 
 // Configure Swagger (before MapDefaultEndpoints to avoid conflicts)
-// habilitando swagger para producao
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     var jsonPath = builder.Configuration["Swagger:JsonPath"];
-
     c.SwaggerEndpoint(jsonPath, "Nutra API V1");
     c.RoutePrefix = "api/swagger";
     c.DocumentTitle = "Nutra API Documentation";
@@ -140,28 +154,7 @@ app.UseSwaggerUI(c =>
     c.DisplayRequestDuration();
 });
 
-/*
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nutra API V1");
-        c.RoutePrefix = "swagger"; 
-        c.DocumentTitle = "Nutra API Documentation";
-        c.DefaultModelsExpandDepth(-1);
-        c.DisplayRequestDuration();
-    });
-}
-*/
-
-app.UseCors("AllowAll");
-
-app.UseHttpsRedirection();
-
-// Map Controllers
 app.MapControllers();
-
 app.MapDefaultEndpoints();
 
 app.Run();
@@ -199,4 +192,3 @@ public class GlobalExceptionHandler : IExceptionHandler
         return true;
     }
 }
-
