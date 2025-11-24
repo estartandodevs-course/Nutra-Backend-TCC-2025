@@ -14,6 +14,7 @@ namespace Nutra.API.Infrastructure;
         }
 
         public DbSet<Usuarios> Usuarios { get; set; }
+        public DbSet<Receitas> Receitas { get; set; }
         public DbSet<Questionarios> Questionarios { get; set; }
         public DbSet<Perguntas> Perguntas { get; set; }
         public DbSet<Opcoes> Opcao { get; set; }
@@ -37,9 +38,11 @@ namespace Nutra.API.Infrastructure;
                 .SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new Nutra.API.Infrastructure.Mapping.ReceitasMapping.MappingReceita());
+
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach(var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("DataCadastro") != null) )
             {
