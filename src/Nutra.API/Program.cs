@@ -155,14 +155,14 @@ if (app.Environment.IsDevelopment())
 }
 */
 
-app.MapDefaultEndpoints();
-
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
 // Map Controllers
 app.MapControllers();
+
+app.MapDefaultEndpoints();
 
 app.Run();
 
