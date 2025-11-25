@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Nutra.API.Infrastructure;
 using Nutra.API.Infrastructure.Repository;
-using Nutra.API.Infrastructure.Repositorys;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Respostas.Criar;
 using Nutra.Application.CasosDeUso.Usuario.Criar;

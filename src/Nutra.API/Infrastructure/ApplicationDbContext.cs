@@ -22,6 +22,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<TipoRegistro> TipoRegistro { get; set; }
     public DbSet<Registros> Registros { get; set; }
     public DbSet<Desafios> Desafios { get; set; }
+    public DbSet<Niveis> Niveis { get; set; }
 
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
