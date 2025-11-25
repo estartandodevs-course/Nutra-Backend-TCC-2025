@@ -12,8 +12,8 @@ using Nutra.API.Infrastructure;
 namespace Nutra.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251120202804_inicial")]
-    partial class inicial
+    [Migration("20251125171020_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,52 @@ namespace Nutra.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("Nutra.Domain.Entidades.Desafios", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("IdTipoRegistro")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PontuacaoNecessaria")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Progresso")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantidadeMeta")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("XpRecompensa")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdTipoRegistro");
+
+                    b.ToTable("Desafios", (string)null);
+                });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Opcoes", b =>
                 {
@@ -110,6 +156,38 @@ namespace Nutra.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Questionarios", (string)null);
+                });
+
+            modelBuilder.Entity("Nutra.Domain.Entidades.Receitas", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ImagemBase64")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ingredientes")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModoPreparo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Receitas", (string)null);
                 });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Registros", b =>
@@ -206,7 +284,7 @@ namespace Nutra.API.Migrations
 
                     b.Property<string>("Categoria")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
+                        .HasColumnType("longtext")
                         .HasColumnName("Categoria");
 
                     b.Property<DateTime>("CreatedAt")
@@ -217,13 +295,15 @@ namespace Nutra.API.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Descricao");
 
+                    b.Property<string>("TipoDetalhe")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("TipoDetalhe");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Categoria")
-                        .IsUnique();
 
                     b.ToTable("TiposRegistro", (string)null);
                 });
@@ -231,10 +311,7 @@ namespace Nutra.API.Migrations
             modelBuilder.Entity("Nutra.Domain.Entidades.Usuarios", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("tinyint(1)");
@@ -269,6 +346,16 @@ namespace Nutra.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios", (string)null);
+                });
+
+            modelBuilder.Entity("Nutra.Domain.Entidades.Desafios", b =>
+                {
+                    b.HasOne("Nutra.Domain.Entidades.TipoRegistro", "TipoRegistro")
+                        .WithMany()
+                        .HasForeignKey("IdTipoRegistro")
+                        .IsRequired();
+
+                    b.Navigation("TipoRegistro");
                 });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Opcoes", b =>
