@@ -20,11 +20,11 @@ public class RegrasDesafiosRepository : IRegrasDesafiosRepository
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
-    public async Task<List<RegrasDesafios>> ObterPorIdOpcao(int idOpcao)
+    public async Task<List<RegrasDesafios>> ObterPorIdOpcao(int idOpcao, CancellationToken cancellationToken)
     {
         return await _context.RegrasDesafios
                 .AsNoTracking()
                 .Where(r => r.IdOpcao == idOpcao)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
     }
 }

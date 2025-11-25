@@ -13,17 +13,17 @@ public class DesafiosRepository : IDesafiosRepository
         _context = context;
     }
 
-    public async Task<Desafios?> ObterPorIdAsync(int id)
+    public async Task<Desafios?> ObterPorIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _context.Desafios
             .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.Id == id);
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
-    public async Task<Desafios?> ObterPorTipoRegistroAsync(TipoRegistro tipoRegistro)
+    public async Task<Desafios?> ObterPorTipoRegistroAsync(int tipoRegistro, CancellationToken cancellationToken)
     {
         return await _context.Desafios
             .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.IdTipoRegistro == tipoRegistro.Id);
+            .FirstOrDefaultAsync(r => r.IdTipoRegistro == tipoRegistro, cancellationToken);
     }
 }

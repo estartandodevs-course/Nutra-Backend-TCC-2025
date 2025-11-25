@@ -9,7 +9,6 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
     {
         private readonly IRespostasRepository _respostasRepository;
         private readonly IRegrasDesafiosRepository _regrasDesafiosRepository;
-        private readonly IDesafiosRepository _desafiosRepository;
         private readonly IProgressosRepository _progressosRepository;
         private readonly IValidacaoRepository _validacaoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
@@ -17,11 +16,15 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
         public CriarRespostaCommandHandler(
             IRespostasRepository respostasRepository,
             IValidacaoRepository validacaoRepository,
-            IUsuarioRepository usuarioRepository)
+            IUsuarioRepository usuarioRepository,
+            IProgressosRepository progressosRepository,
+            IRegrasDesafiosRepository regrasDesafiosRepository)
         {
             _respostasRepository = respostasRepository;
             _validacaoRepository = validacaoRepository;
             _usuarioRepository = usuarioRepository;
+            _progressosRepository = progressosRepository;
+            _regrasDesafiosRepository = regrasDesafiosRepository;
         }
 
         public async Task<Response<List<Domain.Entidades.Respostas>>> Handle(
@@ -99,7 +102,7 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
             var todasRegras = new List<RegrasDesafios>();
             foreach (var idOpcao in idsOpcoes)
             {
-                var regras = await _regrasDesafiosRepository.ObterPorIdOpcao(idOpcao);
+                var regras = await _regrasDesafiosRepository.ObterPorIdOpcao(idOpcao, ct);
                 todasRegras.AddRange(regras);
             }
 
