@@ -8,9 +8,7 @@ public class Desafios : Entity
     public int XpRecompensa { get; private set; }
     public bool Ativo { get; private set; } = false;
     public int IdTipoRegistro { get; private set; }
-    public int IdNivel { get; private set; }
     public TipoRegistro TipoRegistro { get; private set; }
-    public Niveis Nivel { get; private set; }
     public Desafios() { }
 
     public Desafios
@@ -19,8 +17,7 @@ public class Desafios : Entity
             string? descricao,
             int xpRecompensa,
             int quantidadeMeta,
-            int idTipoRegistro,
-            int idNivel
+            int idTipoRegistro
         )
     {
         Titulo = titulo;
@@ -28,6 +25,5 @@ public class Desafios : Entity
         XpRecompensa = xpRecompensa;
         QuantidadeMeta = quantidadeMeta;
         IdTipoRegistro = idTipoRegistro;
-        IdNivel = idNivel;
     }
 }

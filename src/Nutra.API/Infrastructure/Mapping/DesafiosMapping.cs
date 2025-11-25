@@ -31,17 +31,9 @@ namespace Nutra.API.Infrastructure.Mapping
             builder.Property(d => d.IdTipoRegistro)
                 .IsRequired();
 
-            builder.Property(d => d.IdNivel)
-                .IsRequired();
-
             builder.HasOne(d => d.TipoRegistro)
                 .WithMany()
                 .HasForeignKey(d => d.IdTipoRegistro)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-
-            builder.HasOne(d => d.Nivel)
-                .WithMany()
-                .HasForeignKey(d => d.IdNivel)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
