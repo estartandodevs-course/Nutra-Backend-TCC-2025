@@ -45,6 +45,7 @@ builder.Services.AddScoped<IValidacaoRepository, ValidacaoRepository>();
 builder.Services.AddScoped<IReceitasRepository, ReceitasRepository>();
 builder.Services.AddScoped<IDesafiosRepository, DesafiosRepository>();
 builder.Services.AddScoped<IProgressosRepository, ProgressosRepository>();
+builder.Services.AddScoped<IRegrasDesafiosRepository, RegrasDesafiosRepository>();
 
 
 builder.Services.AddMediatR(cfg =>

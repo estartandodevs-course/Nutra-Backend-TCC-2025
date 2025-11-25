@@ -4,10 +4,13 @@ using Nutra.Domain.Entidades;
 
 namespace Nutra.Application.CasosDeUso.Respostas.Criar
 {
-    public class CriarRespostaCommandHandler 
+    public class CriarRespostaCommandHandler
         : IRequestHandler<CriarRespostaCommand, Response<List<Domain.Entidades.Respostas>>>
     {
         private readonly IRespostasRepository _respostasRepository;
+        private readonly IRegrasDesafiosRepository _regrasDesafiosRepository;
+        private readonly IDesafiosRepository _desafiosRepository;
+        private readonly IProgressosRepository _progressosRepository;
         private readonly IValidacaoRepository _validacaoRepository;
         private readonly IUsuarioRepository _usuarioRepository;
 
@@ -39,6 +42,8 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
             )).ToList();
 
             await _respostasRepository.CriarResposta(respostas, ct);
+
+            await AdicionarDesafios(comando, ct);
 
             return Response<List<Domain.Entidades.Respostas>>.Ok(respostas);
         }
@@ -83,6 +88,45 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
                 return Response<List<Domain.Entidades.Respostas>>.Erro("Uma ou mais opções inválidas.");
 
             return null;
+        }
+
+        private async Task AdicionarDesafios(CriarRespostaCommand comando, CancellationToken ct)
+        {
+            List<CriarRespostaCommand.ItemResposta> respostas = comando.Respostas;
+
+            var idsOpcoes = respostas.Select(r => r.IdOpcao).ToList();
+
+            var todasRegras = new List<RegrasDesafios>();
+            foreach (var idOpcao in idsOpcoes)
+            {
+                var regras = await _regrasDesafiosRepository.ObterPorIdOpcao(idOpcao);
+                todasRegras.AddRange(regras);
+            }
+
+            var desafiosComContagem = todasRegras
+                .GroupBy(r => r.IdDesafio)
+                .Select(g => new
+                {
+                    IdDesafio = g.Key,
+                    Contagem = g.Count()
+                })
+                .ToList();
+
+            var idsDesafiosValidos = todasRegras
+                .Select(r => r.IdDesafio)
+                .Distinct()
+                .ToList();
+
+            foreach (var idDesafio in idsDesafiosValidos)
+            {
+                var progresso = new Progressos(comando.IdUsuario, idDesafio)
+                {
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = null
+                };
+
+                await _progressosRepository.AdicionarAsync(progresso.IdUsuario, progresso.IdDesafio, progresso.QuantidadeAtual, ct);
+            }
         }
     }
 }
