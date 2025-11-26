@@ -25,6 +25,14 @@ public class TipoRegistroRepository : ITipoRegistroRepository
         return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<List<TipoRegistro>> ObterPorCategoria(CategoriaRegistro categoria,
+        CancellationToken cancellationToken)
+    {
+        return await _context.TipoRegistro
+            .Where(tp => tp.Categoria == categoria)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<TipoRegistro?> ObterPorId(int id, CancellationToken cancellationToken)
     {
         return await _context.TipoRegistro
