@@ -8,18 +8,18 @@ namespace Nutra.Application.CasosDeUso.Usuario.Atualizar;
 public class AtualizarUsuarioCommand : IRequest<Response<Domain.Entidades.Usuarios>>
 {
     public int Id { get; set; }
-    public string Email { get; set; }
     public string Nome { get; set; }
+    public string Email { get; set; }
     public string Turma { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
     public ValidationResult ResultadoValidacao { get; private set; }
 
-    public AtualizarUsuarioCommand(int id, string email, string nome, string turma)
+    public AtualizarUsuarioCommand(int id,  string nome, string email,string turma)
     {
         Id = id;
-        Email = email;
         Nome = nome;
+        Email = email;
         Turma = turma;
     }
 
