@@ -4,6 +4,7 @@ using Nutra.Application.CasosDeUso.Registros.Atualizar;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Registros.Deletar;
 using Nutra.Application.CasosDeUso.Registros.Listar;
+using Nutra.Application.CasosDeUso.Registros.ListarTiposRegistros;
 using Nutra.Application.DTOs;
 
 namespace Nutra.WebApi.Controllers;

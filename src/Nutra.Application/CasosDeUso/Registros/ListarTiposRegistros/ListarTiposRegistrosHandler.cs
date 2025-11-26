@@ -4,10 +4,10 @@ using Nutra.Application.DTOs;
 using Nutra.Domain.Repository;
 using Nutra.Domain.Entidades;
 
-namespace Nutra.Application.CasosDeUso.Registros.Atualizar;
+namespace Nutra.Application.CasosDeUso.Registros.ListarTiposRegistros;
 
 public class ListarTiposRegistrosHandler :
-    IRequestHandler<ListarTiposRegistrosQuery, Response<TiposRegistrosResponseDto>>
+    IRequestHandler<ListarTiposRegistrosQuery, Response<List<TiposRegistrosResponseDto>>>
 {
     private readonly ITipoRegistroRepository _tiposRegistrosRepository;
 
@@ -16,11 +16,11 @@ public class ListarTiposRegistrosHandler :
         _tiposRegistrosRepository = tiposRegistrosRepository;
     }
 
-    public async Task<Response<TiposRegistrosResponseDto>> Handle(ListarTiposRegistrosQuery request, CancellationToken cancellationToken)
+    public async Task<Response<List<TiposRegistrosResponseDto>>> Handle(ListarTiposRegistrosQuery request, CancellationToken cancellationToken)
     {
         if (!request.ValidarDados())
         {
-            return Response<TiposRegistrosResponseDto>.Erro(
+            return Response<List<TiposRegistrosResponseDto>>.Erro(
                 string.Join("; ", request.ResultadoValidacao.Errors.Select(e => e.ErrorMessage))
             );
         }
@@ -28,20 +28,15 @@ public class ListarTiposRegistrosHandler :
         List<TipoRegistro> registros = await _tiposRegistrosRepository.ObterPorCategoria(request.Categoria, cancellationToken);
 
         if (registros.Count == 0)
-            return Response<TiposRegistrosResponseDto>.Erro("Categoria não possui nenhuma subcategoria cadastrada.");
+            return Response<List<TiposRegistrosResponseDto>>.Erro("Categoria não possui nenhuma subcategoria cadastrada.");
 
-        TiposRegistrosResponseDto responseDto = new()
-        {
-            TiposDetalhes = [.. registros.Select(r => new TiposRegistrosResponseDto.CategoriaDetalhe
+        List<TiposRegistrosResponseDto> responseDto = [.. registros.Select(r => new TiposRegistrosResponseDto
                 {
                     Codigo = (int)r.TipoDetalhe,
                     Descicao = r.TipoDetalhe.ToString()
                 })
-                .DistinctBy(d => d.Descicao)
-                .ToList()
-            ]
-        };
+                .DistinctBy(d => d.Descicao)];
 
-        return Response<TiposRegistrosResponseDto>.Ok(responseDto);
+        return Response<List<TiposRegistrosResponseDto>>.Ok(responseDto);
     }
 }

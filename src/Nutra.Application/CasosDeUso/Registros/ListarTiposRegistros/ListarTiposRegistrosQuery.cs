@@ -4,9 +4,9 @@ using FluentValidation;
 using FluentValidation.Results;
 using Nutra.Application.DTOs;
 
-namespace Nutra.Application.CasosDeUso.Registros.Atualizar;
+namespace Nutra.Application.CasosDeUso.Registros.ListarTiposRegistros;
 
-public class ListarTiposRegistrosQuery(int categoria) : IRequest<Response<TiposRegistrosResponseDto>>
+public class ListarTiposRegistrosQuery(int categoria) : IRequest<Response<List<TiposRegistrosResponseDto>>>
 {
     public CategoriaRegistro Categoria { get; set; } = (CategoriaRegistro)categoria;
 
