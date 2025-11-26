@@ -118,6 +118,7 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
             var idsDesafiosValidos = todasRegras
                 .Select(r => r.IdDesafio)
                 .Distinct()
+                .Take(4)
                 .ToList();
 
             foreach (var idDesafio in idsDesafiosValidos)
