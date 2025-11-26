@@ -123,7 +123,7 @@ namespace Nutra.Application.CasosDeUso.Respostas.Criar
 
             foreach (var idDesafio in idsDesafiosValidos)
             {
-                var progresso = new Progressos(comando.IdUsuario, idDesafio)
+                var progresso = new Domain.Entidades.Progressos(comando.IdUsuario, idDesafio)
                 {
                     CreatedAt = DateTime.Now,
                     UpdatedAt = null
