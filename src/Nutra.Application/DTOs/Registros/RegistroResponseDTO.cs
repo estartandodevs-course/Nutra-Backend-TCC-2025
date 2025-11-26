@@ -18,6 +18,4 @@ public class RegistroResponseDto
     
     [JsonIgnore]
     public int IdTipoRegistro { get; set; }
-
-
 }

@@ -16,6 +16,6 @@ public class TipoRegistro : Entity
     {
         Categoria = categoria;
         Descricao = descricao;
+        TipoDetalhe = tipoDetalhe;
     }
-    
 }

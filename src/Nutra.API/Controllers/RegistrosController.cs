@@ -45,6 +45,13 @@ public class RegistrosController : ControllerBase
         return Ok(resultado);
     }
 
+    [HttpGet("Tipos/{categoria}")]
+    public async Task<IActionResult> ListarTiposRegistros(int categoria)
+    {
+        var resultado = await _mediator.Send(new ListarTiposRegistrosQuery(categoria));
+        return Ok(resultado);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> ListarId(int id)
     {

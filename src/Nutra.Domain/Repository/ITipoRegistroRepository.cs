@@ -7,5 +7,8 @@ public interface ITipoRegistroRepository
 {
     Task<TipoRegistro?> ObterPorCategoriaETipo(CategoriaRegistro categoria, TipoDetalhe tipoEspecifico,
         CancellationToken cancellationToken);
+
+    Task<List<TipoRegistro>> ObterPorCategoria(CategoriaRegistro categoria,
+        CancellationToken cancellationToken);
     Task<TipoRegistro?> ObterPorId(int id, CancellationToken cancellationToken);
 }
