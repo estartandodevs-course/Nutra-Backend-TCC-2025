@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nutra.API.Infrastructure;
 
@@ -11,9 +12,11 @@ using Nutra.API.Infrastructure;
 namespace Nutra.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251126010530_UpdateProgressosTable")]
+    partial class UpdateProgressosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -374,8 +377,9 @@ namespace Nutra.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Categoria")
-                        .HasColumnType("int")
+                    b.Property<string>("Categoria")
+                        .IsRequired()
+                        .HasColumnType("longtext")
                         .HasColumnName("Categoria");
 
                     b.Property<DateTime>("CreatedAt")
@@ -386,8 +390,9 @@ namespace Nutra.API.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("Descricao");
 
-                    b.Property<int>("TipoDetalhe")
-                        .HasColumnType("int")
+                    b.Property<string>("TipoDetalhe")
+                        .IsRequired()
+                        .HasColumnType("longtext")
                         .HasColumnName("TipoDetalhe");
 
                     b.Property<DateTime?>("UpdatedAt")

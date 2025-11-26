@@ -41,6 +41,14 @@ public class ApplicationDbContext : DbContext
         foreach (var relationship in modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
+        modelBuilder.Entity<TipoRegistro>()
+            .Property(t => t.Categoria)
+            .HasConversion<int>();
+
+        modelBuilder.Entity<TipoRegistro>()
+            .Property(t => t.TipoDetalhe)
+            .HasConversion<int>();
+
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new Nutra.API.Infrastructure.Mapping.ReceitasMapping.MappingReceita());
 

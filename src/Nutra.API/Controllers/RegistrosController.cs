@@ -4,6 +4,7 @@ using Nutra.Application.CasosDeUso.Registros.Atualizar;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Registros.Deletar;
 using Nutra.Application.CasosDeUso.Registros.Listar;
+using Nutra.Application.CasosDeUso.Registros.ListarTiposRegistros;
 using Nutra.Application.DTOs;
 
 namespace Nutra.WebApi.Controllers;
@@ -42,6 +43,13 @@ public class RegistrosController : ControllerBase
     public async Task<IActionResult> ListarRegistros()
     {
         var resultado = await _mediator.Send(new ListarRegistrosQuery());
+        return Ok(resultado);
+    }
+
+    [HttpGet("Tipos/{categoria}")]
+    public async Task<IActionResult> ListarTiposRegistros(int categoria)
+    {
+        var resultado = await _mediator.Send(new ListarTiposRegistrosQuery(categoria));
         return Ok(resultado);
     }
 

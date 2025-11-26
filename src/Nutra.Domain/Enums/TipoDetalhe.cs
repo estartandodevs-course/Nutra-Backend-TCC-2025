@@ -17,5 +17,5 @@ public enum TipoDetalhe
     Musculacao,
     Danca,
     Brincadeira,
-    Caminhada
+    Caminhada,
 }
