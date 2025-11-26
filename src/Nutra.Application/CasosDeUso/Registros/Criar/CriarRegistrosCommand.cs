@@ -9,23 +9,23 @@ namespace Nutra.Application.CasosDeUso.Registros.Criar;
 
 public class CriarRegistrosCommand : IRequest<Response<Domain.Entidades.Registros>>
 {
-    public int Id { get; set; }
-    public int Quantidade { get; set;}
-    public string? Observacao { get; set; }
     public int IdUsuario { get; set; }
     public CategoriaRegistro Categoria { get; set; }
     public TipoDetalhe TipoDetalhe { get; set; }
+    public int Quantidade { get; set;}
+    public string? Observacao { get; set; }
     public ValidationResult ResultadoValidacao { get; set; }
 
 
     public CriarRegistrosCommand() { }
 
-    public CriarRegistrosCommand(int quantidade, string? observacao, int idUsuario, CategoriaRegistro categoria)
+    public CriarRegistrosCommand(int idUsuario, CategoriaRegistro categoria, TipoDetalhe tipoDetalhe, int quantidade, string? observacao)
     {
-        Quantidade = quantidade;
-        Observacao = observacao;
         IdUsuario = idUsuario;
         Categoria = categoria;
+        TipoDetalhe = tipoDetalhe;
+        Quantidade = quantidade;
+        Observacao = observacao;
     }
     
     public bool ValidarDados()

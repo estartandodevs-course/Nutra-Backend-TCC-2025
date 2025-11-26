@@ -7,17 +7,19 @@ namespace Nutra.Application.CasosDeUso.Usuario.Criar;
 
 public class CriarUsuarioCommand : IRequest<Response<Domain.Entidades.Usuarios>>
 {
-    public string Email { get; set; }
+   
     public string Nome { get; set; }
+    public string Email { get; set; }
     public string Tipo { get; set; } = "Aluno"; // agora string
     public string Turma { get; set; } = string.Empty;
 
     public ValidationResult ResultadoValidacao { get; set; }
 
-    public CriarUsuarioCommand(string email, string nome, string tipo, string turma)
+    public CriarUsuarioCommand( string nome, string email, string tipo, string turma)
     {
-        Email = email;
+
         Nome = nome;
+        Email = email;
         Tipo = tipo;
         Turma = turma;
     }
