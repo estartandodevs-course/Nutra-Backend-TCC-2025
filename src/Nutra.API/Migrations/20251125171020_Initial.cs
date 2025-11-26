@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Nutra.API.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,12 +34,36 @@ namespace Nutra.API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Receitas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Nome = table.Column<string>(type: "varchar(150)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ingredientes = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ModoPreparo = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ImagemBase64 = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Receitas", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "TiposRegistro",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Categoria = table.Column<string>(type: "varchar(255)", nullable: false)
+                    Categoria = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TipoDetalhe = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Descricao = table.Column<string>(type: "varchar(100)", maxLength: 500, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -56,8 +80,7 @@ namespace Nutra.API.Migrations
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Nome = table.Column<string>(type: "varchar(150)", nullable: false)
@@ -96,6 +119,36 @@ namespace Nutra.API.Migrations
                         name: "FK_Perguntas_Questionarios_IdQuestionario",
                         column: x => x.IdQuestionario,
                         principalTable: "Questionarios",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Desafios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Titulo = table.Column<string>(type: "varchar(100)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descricao = table.Column<string>(type: "varchar(100)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    QuantidadeMeta = table.Column<int>(type: "int", nullable: false),
+                    XpRecompensa = table.Column<int>(type: "int", nullable: false),
+                    PontuacaoNecessaria = table.Column<int>(type: "int", nullable: false),
+                    Progresso = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IdTipoRegistro = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Desafios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Desafios_TiposRegistro_IdTipoRegistro",
+                        column: x => x.IdTipoRegistro,
+                        principalTable: "TiposRegistro",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -195,6 +248,11 @@ namespace Nutra.API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Desafios_IdTipoRegistro",
+                table: "Desafios",
+                column: "IdTipoRegistro");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Opcoes_IdPergunta",
                 table: "Opcoes",
                 column: "IdPergunta");
@@ -233,17 +291,17 @@ namespace Nutra.API.Migrations
                 name: "IX_Respostas_IdUsuario",
                 table: "Respostas",
                 column: "IdUsuario");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TiposRegistro_Categoria",
-                table: "TiposRegistro",
-                column: "Categoria",
-                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Desafios");
+
+            migrationBuilder.DropTable(
+                name: "Receitas");
+
             migrationBuilder.DropTable(
                 name: "Registros");
 

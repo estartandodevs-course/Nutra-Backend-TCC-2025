@@ -1,15 +1,15 @@
 using Amazon.Lambda.AspNetCoreServer.Hosting;
-using Nutra.API.Infrastructure;
-using System.Text.Json.Serialization;
-using Nutra.ServiceDefaults;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Nutra.API.Infrastructure;
 using Nutra.API.Infrastructure.Repository;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Respostas.Criar;
 using Nutra.Application.CasosDeUso.Usuario.Criar;
 using Nutra.Domain.Repository;
+using Nutra.ServiceDefaults;
 using Pomelo.EntityFrameworkCore.MySql;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +42,11 @@ builder.Services.AddScoped<IRespostasRepository, RespostaRepository>();
 builder.Services.AddScoped<IRegistrosRepository, RegistrosRepository>();
 builder.Services.AddScoped<ITipoRegistroRepository, TipoRegistroRepository>();
 builder.Services.AddScoped<IValidacaoRepository, ValidacaoRepository>();
+builder.Services.AddScoped<IReceitasRepository, ReceitasRepository>();
+builder.Services.AddScoped<IDesafiosRepository, DesafiosRepository>();
+builder.Services.AddScoped<IProgressosRepository, ProgressosRepository>();
+builder.Services.AddScoped<IRegrasDesafiosRepository, RegrasDesafiosRepository>();
+
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -102,17 +107,27 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        if (db.Database.GetPendingMigrations().Any())
-        {
-            logger.LogInformation("Applying pending migrations...");
-            db.Database.Migrate();
-            logger.LogInformation("Migrations applied successfully.");
-        }
-        else
-        {
-            logger.LogInformation("No pending migrations. Ensuring database is created...");
-            db.Database.EnsureCreated();
-        }
+        logger.LogInformation("Aplicando migrations pendentes (se houver)...");
+        db.Database.Migrate();
+
+        logger.LogInformation("Garantindo que a tabela 'Receitas' exista...");
+
+        db.Database.ExecuteSqlRaw(@"
+            CREATE TABLE IF NOT EXISTS `Receitas` (
+              `Id` INT NOT NULL AUTO_INCREMENT,
+              `Nome` VARCHAR(150) NOT NULL,
+              `Ingredientes` TEXT NOT NULL,
+              `ModoPreparo` TEXT NOT NULL,
+              `ImagemBase64` LONGTEXT NULL,
+              `CreatedAt` DATETIME(6) NOT NULL,
+              `UpdatedAt` DATETIME(6) NULL,
+              PRIMARY KEY (`Id`)
+            ) ENGINE=InnoDB
+              DEFAULT CHARSET=utf8mb4
+              COLLATE=utf8mb4_unicode_ci;
+        ");
+
+        logger.LogInformation("Tabela 'Receitas' verificada/criada com sucesso.");
     }
     catch (Exception ex)
     {

@@ -28,7 +28,7 @@ public class ValidacaoRepository : IValidacaoRepository
     }
     public async Task<bool> ExistemOpcoes(List<int> perguntasIds, List<int> opcoesIds, CancellationToken cancellationToken)
     {
-        var count = await _context.Opcao
+        var count = await _context.Opcoes
             .Where(o => perguntasIds.Contains(o.IdPergunta) && opcoesIds.Contains(o.Id))
             .CountAsync(cancellationToken);
     

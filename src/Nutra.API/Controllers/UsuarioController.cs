@@ -4,6 +4,7 @@ using Nutra.Application.CasosDeUso.Usuario.Atualizar;
 using Nutra.Application.CasosDeUso.Usuario.Criar;
 using Nutra.Application.CasosDeUso.Usuario.Deletar;
 using Nutra.Application.CasosDeUso.Usuario.Listar;
+using Nutra.Application.DTOs;
 
 namespace Nutra.WebApi.Controllers;
 
@@ -19,9 +20,16 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CriarUsuario([FromBody] CriarUsuarioCommand command)
+    public async Task<IActionResult> CriarUsuario([FromBody] UsuariosCriarDTO dto)
     {
-        var resultado = await _mediator.Send(command);
+        var comando = new CriarUsuarioCommand
+        (
+            dto.Nome,
+            dto.Email,
+            dto.Tipo,
+            dto.Turma
+        );
+        var resultado = await _mediator.Send(comando);
         
         if (!resultado.Sucesso)
             return BadRequest(resultado);
@@ -48,11 +56,17 @@ public class UsuariosController : ControllerBase
     }
     
     [HttpPatch("{id}")]
-    public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] AtualizarUsuarioCommand command)
+    public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] UsuariosAtualizarDTO dto)
     {
-        command.Id = id;
+        var comando = new AtualizarUsuarioCommand
+        (
+            dto.Id, 
+            dto.Nome,
+            dto.Email,
+            dto.Turma
+        );
 
-        var resultado = await _mediator.Send(command);
+        var resultado = await _mediator.Send(comando);
 
         if (!resultado.Sucesso)
             return BadRequest(resultado);

@@ -25,9 +25,16 @@ public class AtualizarRegistrosCommandHandler :
     public async Task<Response<RegistroResponseDto>> Handle(AtualizarRegistrosCommand comando,
         CancellationToken cancellationToken)
     {
+
         if (comando == null)
                 return Response<RegistroResponseDto>.Erro("Comando inválido");
+        if (!comando.ValidarDados())
+        {
+            var mensagemErro = comando.ResultadoValidacao?.Errors?.FirstOrDefault()?.ErrorMessage
+                               ?? "Dados inválidos";
 
+            return Response<RegistroResponseDto>.Erro(mensagemErro);
+        }
             var registro = await _registro.ListarId(comando.Id, cancellationToken);
             if (registro == null)
                 return Response<RegistroResponseDto>.Erro($"Registro com Id {comando.Id} não encontrado");
