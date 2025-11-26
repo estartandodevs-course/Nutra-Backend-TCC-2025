@@ -25,6 +25,17 @@ public class ProgressosRepository : IProgressosRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<List<Progressos>> ObterPorUsuario(int idUsuario, CancellationToken cancellationToken)
+    {
+        return await _context.Progressos
+            .AsNoTracking()
+            .Include(p => p.Usuario)
+            .Include(p => p.Desafio)
+            .ThenInclude(d => d.TipoRegistro)
+            .Where(p => p.IdUsuario == idUsuario && p.Ativo == true && p.Completo == false)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Progressos?> ObterPorIdAsync(int id)
     {
         return await _context.Progressos
