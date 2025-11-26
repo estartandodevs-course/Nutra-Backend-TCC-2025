@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Nutra.API.Infrastructure;
 using Nutra.Domain.Entidades;
 using Nutra.Domain.Repository;
 
-namespace Nutra.API.Infrastructure.Repositorys;
+namespace Nutra.API.Infrastructure.Repository;
 
 public class ReceitasRepository : IReceitasRepository
 {
@@ -35,5 +34,4 @@ public class ReceitasRepository : IReceitasRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Id == id);
     }
-
 }

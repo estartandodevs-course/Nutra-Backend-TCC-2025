@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Nutra.API.Infrastructure;
 using Nutra.API.Infrastructure.Repository;
-using Nutra.API.Infrastructure.Repositorys;
 using Nutra.Application.CasosDeUso.Registros.Criar;
 using Nutra.Application.CasosDeUso.Respostas.Criar;
 using Nutra.Application.CasosDeUso.Usuario.Criar;
@@ -44,6 +43,9 @@ builder.Services.AddScoped<IRegistrosRepository, RegistrosRepository>();
 builder.Services.AddScoped<ITipoRegistroRepository, TipoRegistroRepository>();
 builder.Services.AddScoped<IValidacaoRepository, ValidacaoRepository>();
 builder.Services.AddScoped<IReceitasRepository, ReceitasRepository>();
+builder.Services.AddScoped<IDesafiosRepository, DesafiosRepository>();
+builder.Services.AddScoped<IProgressosRepository, ProgressosRepository>();
+builder.Services.AddScoped<IRegrasDesafiosRepository, RegrasDesafiosRepository>();
 
 
 builder.Services.AddMediatR(cfg =>

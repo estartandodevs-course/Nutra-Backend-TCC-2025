@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nutra.API.Infrastructure;
 
@@ -11,9 +12,11 @@ using Nutra.API.Infrastructure;
 namespace Nutra.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125210210_AddRegrasDesafiosTable")]
+    partial class AddRegrasDesafiosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,6 +305,9 @@ namespace Nutra.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("DesafiosId")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdDesafio")
                         .HasColumnType("int");
 
@@ -313,11 +319,9 @@ namespace Nutra.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdDesafio");
+                    b.HasIndex("DesafiosId");
 
-                    b.HasIndex("IdOpcao");
-
-                    b.ToTable("RegrasDesafios", (string)null);
+                    b.ToTable("RegrasDesafios");
                 });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Respostas", b =>
@@ -505,17 +509,10 @@ namespace Nutra.API.Migrations
                 {
                     b.HasOne("Nutra.Domain.Entidades.Desafios", "Desafios")
                         .WithMany()
-                        .HasForeignKey("IdDesafio")
-                        .IsRequired();
-
-                    b.HasOne("Nutra.Domain.Entidades.Opcoes", "Opcoes")
-                        .WithMany()
-                        .HasForeignKey("IdOpcao")
+                        .HasForeignKey("DesafiosId")
                         .IsRequired();
 
                     b.Navigation("Desafios");
-
-                    b.Navigation("Opcoes");
                 });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Respostas", b =>

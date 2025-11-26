@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nutra.API.Infrastructure;
 
@@ -11,9 +12,11 @@ using Nutra.API.Infrastructure;
 namespace Nutra.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125200316_AddProgressosTable")]
+    partial class AddProgressosTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,35 +294,6 @@ namespace Nutra.API.Migrations
                     b.ToTable("Registros", (string)null);
                 });
 
-            modelBuilder.Entity("Nutra.Domain.Entidades.RegrasDesafios", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("IdDesafio")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdOpcao")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdDesafio");
-
-                    b.HasIndex("IdOpcao");
-
-                    b.ToTable("RegrasDesafios", (string)null);
-                });
-
             modelBuilder.Entity("Nutra.Domain.Entidades.Respostas", b =>
                 {
                     b.Property<int>("Id")
@@ -499,23 +473,6 @@ namespace Nutra.API.Migrations
                     b.Navigation("Tipo");
 
                     b.Navigation("Usuarios");
-                });
-
-            modelBuilder.Entity("Nutra.Domain.Entidades.RegrasDesafios", b =>
-                {
-                    b.HasOne("Nutra.Domain.Entidades.Desafios", "Desafios")
-                        .WithMany()
-                        .HasForeignKey("IdDesafio")
-                        .IsRequired();
-
-                    b.HasOne("Nutra.Domain.Entidades.Opcoes", "Opcoes")
-                        .WithMany()
-                        .HasForeignKey("IdOpcao")
-                        .IsRequired();
-
-                    b.Navigation("Desafios");
-
-                    b.Navigation("Opcoes");
                 });
 
             modelBuilder.Entity("Nutra.Domain.Entidades.Respostas", b =>

@@ -17,11 +17,14 @@ public class ApplicationDbContext : DbContext
     public DbSet<Receitas> Receitas { get; set; }
     public DbSet<Questionarios> Questionarios { get; set; }
     public DbSet<Perguntas> Perguntas { get; set; }
-    public DbSet<Opcoes> Opcao { get; set; }
+    public DbSet<Opcoes> Opcoes { get; set; }
     public DbSet<Respostas> Respostas { get; set; }
     public DbSet<TipoRegistro> TipoRegistro { get; set; }
     public DbSet<Registros> Registros { get; set; }
     public DbSet<Desafios> Desafios { get; set; }
+    public DbSet<Niveis> Niveis { get; set; }
+    public DbSet<Progressos> Progressos { get; set; }
+    public DbSet<RegrasDesafios> RegrasDesafios { get; set; }
 
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {

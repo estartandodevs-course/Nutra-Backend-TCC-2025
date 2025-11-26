@@ -25,12 +25,6 @@ namespace Nutra.API.Infrastructure.Mapping
             builder.Property(d => d.XpRecompensa)
                 .IsRequired();
 
-            builder.Property(d => d.PontuacaoNecessaria)
-                .IsRequired();
-
-            builder.Property(d => d.Progresso)
-                .IsRequired();
-
             builder.Property(d => d.Ativo)
                 .IsRequired();
 
