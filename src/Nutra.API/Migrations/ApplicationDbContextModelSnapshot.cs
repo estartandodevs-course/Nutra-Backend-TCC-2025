@@ -401,7 +401,10 @@ namespace Nutra.API.Migrations
             modelBuilder.Entity("Nutra.Domain.Entidades.Usuarios", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Ativo")
                         .HasColumnType("tinyint(1)");
