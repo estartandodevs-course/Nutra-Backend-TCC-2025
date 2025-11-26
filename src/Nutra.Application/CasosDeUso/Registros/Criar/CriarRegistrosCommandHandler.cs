@@ -68,9 +68,9 @@ public class CriarRegistrosCommandHandler
     private async Task AtualizarDesafios(CriarRegistrosCommand comando,
         CancellationToken cancellationToken)
     {
-        List<Progressos> progressos = await _progressosRepository.ObterPorTipoDetalhe(comando.TipoDetalhe, comando.IdUsuario, cancellationToken);
+        List<Domain.Entidades.Progressos> progressos = await _progressosRepository.ObterPorTipoDetalhe(comando.TipoDetalhe, comando.IdUsuario, cancellationToken);
 
-        foreach (Progressos progresso in progressos)
+        foreach (Domain.Entidades.Progressos progresso in progressos)
         {
             Desafios? desafio = await _desafiosRepository.ObterPorIdAsync(progresso.IdDesafio, cancellationToken);
 

@@ -13,6 +13,9 @@ namespace Nutra.API.Infrastructure.Mapping;
 
             builder.HasKey(u => u.Id);
 
+            builder.Property(u => u.Id)
+                .ValueGeneratedOnAdd();
+
             builder.Property(u => u.Email)
                 .IsRequired()
                 .HasColumnType("varchar(100)");

@@ -17,7 +17,11 @@ public class AtualizarUsuarioCommandHandler : IRequestHandler<AtualizarUsuarioCo
     {
         if (!comando.ValidarDados())
         {
-            return Response<Domain.Entidades.Usuarios>.Erro("Dados errados");
+            var mensagens = comando.ResultadoValidacao.Errors
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            return Response<Domain.Entidades.Usuarios>.Erro(string.Join("; ", mensagens));
         }
 
         var usuario = await _usuario.ListarId(comando.Id, cancellationToken);
