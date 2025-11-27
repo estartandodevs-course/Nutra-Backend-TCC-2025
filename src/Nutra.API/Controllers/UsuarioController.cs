@@ -6,7 +6,7 @@ using Nutra.Application.CasosDeUso.Usuario.Deletar;
 using Nutra.Application.CasosDeUso.Usuario.Listar;
 using Nutra.Application.DTOs;
 
-namespace Nutra.WebApi.Controllers;
+namespace Nutra.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -25,6 +25,7 @@ public class UsuariosController : ControllerBase
         var comando = new CriarUsuarioCommand
         (
             dto.Nome,
+            dto.Senha,
             dto.Email,
             dto.Tipo,
             dto.Turma

@@ -15,6 +15,11 @@ namespace Nutra.API.Infrastructure.Mapping;
 
             builder.Property(u => u.Id)
                 .ValueGeneratedOnAdd();
+            
+            builder.Property(u => u.Senha)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("varchar(100)");
 
             builder.Property(u => u.Email)
                 .IsRequired()

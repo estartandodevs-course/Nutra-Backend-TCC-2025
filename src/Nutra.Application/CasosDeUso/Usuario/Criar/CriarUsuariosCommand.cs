@@ -10,15 +10,17 @@ public class CriarUsuarioCommand : IRequest<Response<Domain.Entidades.Usuarios>>
    
     public string Nome { get; set; }
     public string Email { get; set; }
+    public string Senha { get; private set;}
     public string Tipo { get; set; } = "Aluno"; // agora string
     public string Turma { get; set; } = string.Empty;
 
     public ValidationResult ResultadoValidacao { get; set; }
 
-    public CriarUsuarioCommand( string nome, string email, string tipo, string turma)
+    public CriarUsuarioCommand( string nome, string senha, string email, string tipo, string turma)
     {
 
         Nome = nome;
+        Senha = senha;
         Email = email;
         Tipo = tipo;
         Turma = turma;
