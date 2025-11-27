@@ -32,6 +32,7 @@ public class CriarUsuarioCommandHandler : IRequestHandler<CriarUsuarioCommand, R
 
             var novoUsuario = new Usuarios(
                 comando.Email,
+                comando.Senha,
                 comando.Nome,
                 tipoEnum,
                 comando.Turma

@@ -420,6 +420,11 @@ namespace Nutra.API.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(150)");
 
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
